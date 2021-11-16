@@ -3,6 +3,7 @@
 #include <chrono>
 #include <stdexcept>
 
+#include "common.h"
 #include "model.h"
 #include "ncurses_cli.h"
 
@@ -24,7 +25,8 @@ int main(){
 		gridHistory.push_back(grid);
 
 		//Affiche le plateau
-		draw(grid);
+		int sc = score(grid);
+		draw(grid, sc);
 
 		//Affiche le message de victoire
 		if (estGagnant(grid)){
@@ -78,7 +80,8 @@ int main(){
 	} while (not (estTermine(grid)));
 
 	//Termine le programme en cas de defaite
-	draw(grid);
+	int sc = score(grid);
+	draw(grid, sc);
 	drawEnd();
 	endScreen();
 	return 0;

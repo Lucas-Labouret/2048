@@ -2,23 +2,9 @@
 #include <vector>
 #include <math.h>
 
-#include "model.h"
+#include "common.h"
 
 using namespace std;
-
-
-string operator * (string str, unsigned int n){
-	/** permet de multiplier des chaines de caractere par des entier positif de la meme facon qu'en python
-	 * @param str la chaine de caractere
-	 * @param n le nombre de repetition
-	 * @return str concataine n-1 fois avec lui-même
-	**/
-    string output = "";
-    while (n--) {
-        output += str;
-    }
-    return output;
-}
 
 
 matrix plateauVide(){
@@ -155,141 +141,119 @@ matrix deplacementHaut(matrix grid){
 	 * @grid le plateau
 	 * @return le nouveau plateau
 	**/
-	for (int x = 0; x < GRID_WIDTH; x++){
-        for (int y = 0; y < GRID_HEIGHT - 1; y++){
-            bool valChanged = false;
-            for (int sub_y = 1; y+sub_y < GRID_HEIGHT; sub_y++){
-                if ((grid[y][x] == 0) and (grid[y+sub_y][x] != 0)){
-                    grid[y][x] = grid[y+sub_y][x];
-                    grid[y+sub_y][x] = 0;
-                }
-                bool interValue = false;
-                for (int i = 1; i < sub_y; i++){
-                    if (grid[y+i][x] != 0){
-                        interValue = true;
-                    }
-                }
-                if ((grid[y][x] == grid[y+sub_y][x]) and (not interValue)){
-                    if (not valChanged){
-                        grid[y][x] *= 2;
-                        grid[y+sub_y][x] = 0;
-                        valChanged = true;
-                    }else if (grid[y+1][x] == 0){
-                        grid[y+1][x] = grid[y+sub_y][x];
-                        grid[y+sub_y][x] = 0;
-                    }
+	for (int x = 0; x < GRID_WIDTH; x++){ for (int y = 0; y < GRID_HEIGHT - 1; y++){ //Se place sur case du plateau
+        bool valChanged = false;
+        for (int sub_y = 1; y+sub_y < GRID_HEIGHT; sub_y++){ //Etudie les cases situées en dessous de la case actuelle
+        	//Si la case actuelle est un 0, remonte la première case étudiée non nulle
+            if ((grid[y][x] == 0) and (grid[y+sub_y][x] != 0)){
+                grid[y][x] = grid[y+sub_y][x];
+                grid[y+sub_y][x] = 0;
+            }
+            //Vérifie si il y a une tuile entre la case actuelle et la case étudiée
+            bool interValue = false;
+            for (int i = 1; i < sub_y; i++){
+                if (grid[y+i][x] != 0){
+                    interValue = true;
                 }
             }
+            //Fusionne la case actuelle avec la case étudiée si elles on la même valeur, qu'aucune case ne les sépare et qu'une fusion n'a pas déjà eu lieu.
+            if ((grid[y][x] == grid[y+sub_y][x]) and (not interValue) and (not valChanged)){
+                grid[y][x] *= 2;
+                grid[y+sub_y][x] = 0;
+                valChanged = true;
+            }
         }
-    }
+    }}
 	return grid;
 }
 
 
 matrix deplacementBas(matrix grid){
 	/** Effectue un deplacement vers le bas
+	 * Pour un commentaire plus détailler du foctionnement de la fonction, se référer à la fonction deplacementHaut()
 	 * @grid le plateau
 	 * @return le nouveau plateau
 	**/
-	for (int x = 0; x < GRID_WIDTH; x++){
-        for (int y = GRID_HEIGHT-1; y > 0; y--){
-            bool valChanged = false;
-            for (int sub_y = 1; y-sub_y >= 0; sub_y++){
-                if ((grid[y][x] == 0) and (grid[y-sub_y][x] != 0)){
-                    grid[y][x] = grid[y-sub_y][x];
-                    grid[y-sub_y][x] = 0;
-                }
-                bool interValue = false;
-                for (int i = 1; i < sub_y; i++){
-                    if (grid[y-i][x] != 0){
-                        interValue = true;
-                    }
-                }
-                if ((grid[y][x] == grid[y-sub_y][x]) and (not interValue)){
-                    if (not valChanged){
-                        grid[y][x] *= 2;
-                        grid[y-sub_y][x] = 0;
-                        valChanged = true;
-                    }else if (grid[y-1][x] == 0){
-                        grid[y-1][x] = grid[y-sub_y][x];
-                        grid[y-sub_y][x] = 0;
-                    }
+	for (int x = 0; x < GRID_WIDTH; x++){ for (int y = GRID_HEIGHT-1; y > 0; y--){
+        bool valChanged = false;
+        for (int sub_y = 1; y-sub_y >= 0; sub_y++){
+            if ((grid[y][x] == 0) and (grid[y-sub_y][x] != 0)){
+                grid[y][x] = grid[y-sub_y][x];
+                grid[y-sub_y][x] = 0;
+            }
+            bool interValue = false;
+            for (int i = 1; i < sub_y; i++){
+                if (grid[y-i][x] != 0){
+                    interValue = true;
                 }
             }
+            if ((grid[y][x] == grid[y-sub_y][x]) and (not interValue) and (not valChanged)){
+                grid[y][x] *= 2;
+                grid[y-sub_y][x] = 0;
+                valChanged = true;
+            }
         }
-    }
+    }}
 	return grid;
 }
 
 
 matrix deplacementGauche(matrix grid){
 	/** Effectue un deplacement vers la gauche
+	 * Pour un commentaire plus détailler du foctionnement de cette fonction, se référer à la fonction deplacementHaut()
 	 * @grid le plateau
 	 * @return le nouveau plateau
 	**/
-	for (int y = 0; y < GRID_HEIGHT; y++){
-        for (int x = 0; x < GRID_WIDTH - 1; x++){
-            bool valChanged = false;
-            for (int sub_x = 1; x+sub_x < GRID_WIDTH; sub_x++){
-                if ((grid[y][x] == 0) and (grid[y][x+sub_x] != 0)){
-                    grid[y][x] = grid[y][x+sub_x];
-                    grid[y][x+sub_x] = 0;
-                }
-                bool interValue = false;
-                for (int i = 1; i < sub_x; i++){
-                    if (grid[y][x+i] != 0){
-                        interValue = true;
-                    }
-                }
-                if ((grid[y][x] == grid[y][x+sub_x]) and (not interValue)){
-                    if (not valChanged){
-                        grid[y][x] *= 2;
-                        grid[y][x+sub_x] = 0;
-                        valChanged = true;
-                    }else if (grid[y][x+1] == 0){
-                        grid[y][x+1] = grid[y][x+sub_x];
-                        grid[y][x+sub_x] = 0;
-                    }
+	for (int y = 0; y < GRID_HEIGHT; y++){ for (int x = 0; x < GRID_WIDTH - 1; x++){
+        bool valChanged = false;
+        for (int sub_x = 1; x+sub_x < GRID_WIDTH; sub_x++){
+            if ((grid[y][x] == 0) and (grid[y][x+sub_x] != 0)){
+                grid[y][x] = grid[y][x+sub_x];
+                grid[y][x+sub_x] = 0;
+            }
+            bool interValue = false;
+            for (int i = 1; i < sub_x; i++){
+                if (grid[y][x+i] != 0){
+                    interValue = true;
                 }
             }
+            if ((grid[y][x] == grid[y][x+sub_x]) and (not interValue) and (not valChanged)){
+                grid[y][x] *= 2;
+                grid[y][x+sub_x] = 0;
+                valChanged = true;
+            }
         }
-    }
+    }}
 	return grid;
 }
 
 
 matrix deplacementDroite(matrix grid){
 	/** Effectue un deplacement vers la droite
+	 * Pour un commentaire plus détailler du foctionnement de cette fonction, se référer à la fonction deplacementHaut()
 	 * @grid le plateau
 	 * @return le nouveau plateau
 	**/
-	for (int y = 0; y < GRID_HEIGHT; y++){
-        for (int x = GRID_WIDTH-1; x > 0; x--){
-            bool valChanged = false;
-            for (int sub_x = 1; x-sub_x >= 0; sub_x++){
-                if ((grid[y][x] == 0) and (grid[y][x-sub_x] != 0)){
-                    grid[y][x] = grid[y][x-sub_x];
-                    grid[y][x-sub_x] = 0;
-                }
-                bool interValue = false;
-                for (int i = 1; i < sub_x; i++){
-                    if (grid[y][x-i] != 0){
-                        interValue = true;
-                    }
-                }
-                if ((grid[y][x] == grid[y][x-sub_x]) and (not interValue)){
-                    if (not valChanged){
-                        grid[y][x] *= 2;
-                        grid[y][x-sub_x] = 0;
-                        valChanged = true;
-                    }else if (grid[y][x-1] == 0){
-                        grid[y][x-1] = grid[y][x-sub_x];
-                        grid[y][x-sub_x] = 0;
-                    }
+	for (int y = 0; y < GRID_HEIGHT; y++){ for (int x = GRID_WIDTH-1; x > 0; x--){
+        bool valChanged = false;
+        for (int sub_x = 1; x-sub_x >= 0; sub_x++){
+            if ((grid[y][x] == 0) and (grid[y][x-sub_x] != 0)){
+                grid[y][x] = grid[y][x-sub_x];
+                grid[y][x-sub_x] = 0;
+            }
+            bool interValue = false;
+            for (int i = 1; i < sub_x; i++){
+                if (grid[y][x-i] != 0){
+                    interValue = true;
                 }
             }
+            if ((grid[y][x] == grid[y][x-sub_x]) and (not interValue)){
+                grid[y][x] *= 2;
+                grid[y][x-sub_x] = 0;
+                valChanged = true;
+            }
         }
-    }
+    }}
 	return grid;
 }
 
@@ -367,9 +331,12 @@ int score(matrix grid){
 
 string dessine(matrix grid){
 	/** Construit une chaine de caracteres représentant le plateau
+	 * Cette fonction est obsolète, remplacée par la fonction draw() du fichier ncurses_cli.h
 	 * @param grid le plateau
 	 * @return une chaine de caracteres représentant le plateau
 	**/
+	//Construit un tableau 2D de chaine de caractères correspondant au plateau
+	//Determine la longeur de la tuile la plus longue
 	vector<vector<string>> strGrid = {};
 	int max_len = 0;
 	for (auto &line: grid){
@@ -385,29 +352,34 @@ string dessine(matrix grid){
 		strGrid.push_back(strLine);
 	}
 
-	string str2048 = "";
+	string str2048 = ""; //La chaine de caractère représentant le jeu
+	string sc = to_string(score(grid)); //Le score actuel
+
+	//Déclare les caractère utiliser pour afficher la grille
 	string star = "*";
 	string space = " ";
-	string head = "";
-	string sc = to_string(score(grid));
 
+	//Contient la chaine de caratères séparant deux ligne du tableau
 	string separator =  (star * (GRID_WIDTH+1)) 
 		               +(star * max_len * GRID_WIDTH) 
 		               +"\n";
 
+    //Affiche le score sur une ligne
+	//Affiche la première ligne du plateau sur la suivante et y centre "2048"
 	if (separator.size()%2 == 0){
-		head =  "Score: " + sc + "\n"
-		       +( star * (separator.size()/2 - 3) ) + "2048"
-			   +( star * (separator.size()/2 - 2) ) + "\n";
+		str2048+=  "Score: " + sc + "\n"
+		          +( star * (separator.size()/2 - 3) ) + "2048"
+			      +( star * (separator.size()/2 - 2) ) + "\n";
 	} else {
-		head =  "Score: " + sc + "\n"
-		       +( star * (separator.size()/2 - 2) ) + "2048"
-			   +( star * (separator.size()/2 - 2) ) + "\n";
+		str2048+=  "Score: " + sc + "\n"
+		          +( star * (separator.size()/2 - 2) ) + "2048"
+			      +( star * (separator.size()/2 - 2) ) + "\n";
 	}
-
-    str2048 += head;
+    
+    //Construit le plateau case par case
 	for (auto line: strGrid){
 		for (auto cell: line){
+			//Centre chaque tuile du plateau dans une case
 			if ((max_len-cell.size())%2 == 0){
 				str2048 +=  star + (space * (((max_len-cell.size()))/2))
 						   +cell +(space * (((max_len-cell.size()))/2));
@@ -417,6 +389,7 @@ string dessine(matrix grid){
 			}
 			
 		}
+		//Finie la ligne et la sépare de la suivante
 		str2048 += star + "\n" + separator;
 	}
 	return str2048;
@@ -424,6 +397,10 @@ string dessine(matrix grid){
 
 
 void reset_rand(float seed, int iter){
+	/**Reproduit l'état de la fonction rand() après iter-1 déplacements
+	 * @param seed la seed utiliser par la fonction srand() en début de partie
+	 * @param iter le nombre de plateau à avoir été généré
+	**/
 	srand(seed);
 	rand();
 	rand();

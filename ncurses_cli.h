@@ -4,7 +4,8 @@
 using namespace std;
 
 const int KEY_ENT = 10;
-const vector<int> VALID_KEYS = {KEY_UP, KEY_LEFT, KEY_DOWN, KEY_RIGHT, KEY_BACKSPACE, KEY_ENT};
+const int KEY_R = 114;
+const vector<int> VALID_KEYS = {KEY_UP, KEY_LEFT, KEY_DOWN, KEY_RIGHT, KEY_BACKSPACE, KEY_ENT, KEY_R};
 
 const int Y_MARGIN = 2;
 const int X_MARGIN = 2;
@@ -20,4 +21,4 @@ void draw(matrix grid, int sc);
 void drawWin();
 void invalidMove();
 void cannotMove();
-void drawEnd();
+bool drawEnd();

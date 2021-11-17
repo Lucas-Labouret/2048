@@ -55,6 +55,9 @@ int mapMove(int input){
 	if (input == VALID_KEYS[5]){
 		move = EXIT;
 	}
+	if (input == VALID_KEYS[6]){
+		move = RESTART;
+	}
 	return move;
 }
 
@@ -101,8 +104,18 @@ void draw(matrix grid, int sc){
 	//Efface tout ce qu'il y a l'ecran
 	clear();
 
+	//Affiche les instructions
+	attron(COLOR_PAIR(3));
+	mvprintw(Y_MARGIN,   X_MARGIN, "|--------------------------Instructions---------------------------|");
+	mvprintw(Y_MARGIN+1, X_MARGIN, "|             Jouez avec les flèches directionnelles.             |");
+	mvprintw(Y_MARGIN+2, X_MARGIN, "|Utilisez la touche backspace pour annuler le dernier déplacement.|");
+	mvprintw(Y_MARGIN+3, X_MARGIN, "|            Appuyer sur R pour recommencer une partie            |");
+	mvprintw(Y_MARGIN+4, X_MARGIN, "|     Appuyez sur la touche enter pour quitter le programme.      |");
+	mvprintw(Y_MARGIN+5, X_MARGIN, "|-----------------------------------------------------------------|");
+	attroff(COLOR_PAIR(3));
+
 	//Affiche le score
-	move(Y_MARGIN ,X_MARGIN);
+	move(Y_MARGIN+7 ,X_MARGIN);
 	attron(COLOR_PAIR(1));
 	printw("Score: ");
 	attroff(COLOR_PAIR(1)); attron(COLOR_PAIR(2));
@@ -116,9 +129,9 @@ void draw(matrix grid, int sc){
 	//Affiche la tete du plateau
 	attron(COLOR_PAIR(1));
 	if (separator.size()%2 == 0){
-		mvprintw(Y_MARGIN+1, X_MARGIN, ( star * (separator.size()/2 - 2) ).c_str());
+		mvprintw(Y_MARGIN+8, X_MARGIN, ( star * (separator.size()/2 - 2) ).c_str());
 	} else {
-		mvprintw(Y_MARGIN+1, X_MARGIN, ( star * (separator.size()/2 - 1) ).c_str());
+		mvprintw(Y_MARGIN+8, X_MARGIN, ( star * (separator.size()/2 - 1) ).c_str());
 	}
 	attroff(COLOR_PAIR(1)); attron(COLOR_PAIR(2));
 	printw("2048");
@@ -128,7 +141,7 @@ void draw(matrix grid, int sc){
 
 	//Affiche le plateau de jeu
 	for (int y = 0; y < GRID_HEIGHT; y++){ //Affiche chaque ligne du plateau
-		move(Y_MARGIN+2+2*y, X_MARGIN);
+		move(Y_MARGIN+9+2*y, X_MARGIN);
 		for (int x = 0; x < GRID_WIDTH; x++){ //Affiche chaque tuile d'une ligne
 
 			//Centre la tuile dans une case
@@ -164,23 +177,15 @@ void draw(matrix grid, int sc){
 		//Complète la ligne et affiche une ligne de séparation avant la suivante
 		attron(COLOR_PAIR(1));
 		printw(star.c_str());
-		move(Y_MARGIN+3+2*y, X_MARGIN);
+		move(Y_MARGIN+10+2*y, X_MARGIN);
 		printw(separator.c_str());
 		attroff(COLOR_PAIR(1));
 	}
-	//Affiche les instructions
-	attron(COLOR_PAIR(3));
-	mvprintw(2*GRID_HEIGHT+Y_MARGIN+7,  X_MARGIN, "|--------------------------Instructions---------------------------|");
-	mvprintw(2*GRID_HEIGHT+Y_MARGIN+8,  X_MARGIN, "|             Jouez avec les flèches directionnelles.             |");
-	mvprintw(2*GRID_HEIGHT+Y_MARGIN+9,  X_MARGIN, "|Utilisez la touche backspace pour annuler le dernier déplacement.|");
-	mvprintw(2*GRID_HEIGHT+Y_MARGIN+10, X_MARGIN, "|     Appuyez sur la touche enter pour quitter le programme.      |");
-	mvprintw(2*GRID_HEIGHT+Y_MARGIN+11, X_MARGIN, "|-----------------------------------------------------------------|");
-	attroff(COLOR_PAIR(3));
 }
 
 
 void drawWin(){
-	move(2*GRID_HEIGHT+Y_MARGIN+3, X_MARGIN+2);
+	move(2*GRID_HEIGHT+Y_MARGIN+10, X_MARGIN+2);
 	clrtoeol();
 	attron(A_REVERSE);
 	printw("Victoire!");
@@ -189,22 +194,22 @@ void drawWin(){
 
 
 void invalidMove(){
-	move(2*GRID_HEIGHT+Y_MARGIN+4, X_MARGIN);
+	move(2*GRID_HEIGHT+Y_MARGIN+11, X_MARGIN);
 	printw("Action invalide");
 }
 
 
 void cannotMove(){
-	move(2*GRID_HEIGHT+Y_MARGIN+4, X_MARGIN);
+	move(2*GRID_HEIGHT+Y_MARGIN+11, X_MARGIN);
 	printw("Deplacement impossible");
 }
 
 
 void drawEnd(){
-	move(2*GRID_HEIGHT+Y_MARGIN+4, X_MARGIN);
+	move(2*GRID_HEIGHT+Y_MARGIN+11, X_MARGIN);
 	clrtoeol();
 	printw("Partie terminée.");
-	move(2*GRID_HEIGHT+Y_MARGIN+5, X_MARGIN);
-	printw("Appuyer sur n'importe quelle touche pour quitter...");
-	getch();
+	move(2*GRID_HEIGHT+Y_MARGIN+12, X_MARGIN);
+	printw("Appuyer sur R pour recommencer n'importe quelle touche pour quitter...");
+	return (getch() == VALID_KEYS[6]);
 }

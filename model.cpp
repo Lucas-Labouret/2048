@@ -170,7 +170,7 @@ matrix deplacementHaut(matrix grid){
 
 matrix deplacementBas(matrix grid){
 	/** Effectue un deplacement vers le bas
-	 * Pour un commentaire plus détailler du foctionnement de la fonction, se référer à la fonction deplacementHaut()
+	 * Pour un commentaire plus détaillé du foctionnement de la fonction, se référer à la fonction deplacementHaut()
 	 * @grid le plateau
 	 * @return le nouveau plateau
 	**/
@@ -200,7 +200,7 @@ matrix deplacementBas(matrix grid){
 
 matrix deplacementGauche(matrix grid){
 	/** Effectue un deplacement vers la gauche
-	 * Pour un commentaire plus détailler du foctionnement de cette fonction, se référer à la fonction deplacementHaut()
+	 * Pour un commentaire plus détaillé du foctionnement de cette fonction, se référer à la fonction deplacementHaut()
 	 * @grid le plateau
 	 * @return le nouveau plateau
 	**/
@@ -230,7 +230,7 @@ matrix deplacementGauche(matrix grid){
 
 matrix deplacementDroite(matrix grid){
 	/** Effectue un deplacement vers la droite
-	 * Pour un commentaire plus détailler du foctionnement de cette fonction, se référer à la fonction deplacementHaut()
+	 * Pour un commentaire plus détaillé du foctionnement de cette fonction, se référer à la fonction deplacementHaut()
 	 * @grid le plateau
 	 * @return le nouveau plateau
 	**/
@@ -402,7 +402,8 @@ void reset_rand(float seed, int iter){
 	 * @param iter le nombre de plateau à avoir été généré
 	**/
 	srand(seed);
-	rand();
-	rand();
-	for (int i = 1; i < iter; i++){ rand(); }
+	for (int i = 0; i < iter+1; i++){
+		rand();
+		rand();
+	}
 }

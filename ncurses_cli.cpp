@@ -205,7 +205,7 @@ void cannotMove(){
 }
 
 
-void drawEnd(){
+bool drawEnd(){
 	move(2*GRID_HEIGHT+Y_MARGIN+11, X_MARGIN);
 	clrtoeol();
 	printw("Partie terminée.");

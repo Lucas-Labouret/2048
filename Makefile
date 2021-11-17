@@ -1,5 +1,5 @@
 2048: 2048.o model.o ncurses_cli.o common.o
-	g++ 2048.o model.o ncurses_cli.o common.o -o 2048 -lncurses
+	g++ -g 2048.o model.o ncurses_cli.o common.o -o 2048 -lncurses
 
 2048.o: 2048.cpp model.h ncurses_cli.h common.h
 	g++ -c 2048.cpp

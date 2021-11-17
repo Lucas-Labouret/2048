@@ -43,7 +43,7 @@ int tireDeuxOuQuatre(){
 	/** Tire aleatoirement 2 ou 4 avec une probabilité respctive de 0.9 et 0.1
 	 * @return 2 ou 4
 	**/
-	if (rand()%10 == 0){return 4;}
+	if (rand()%10 == 0){ return 4; }
 	return 2;
 }
 
@@ -141,8 +141,8 @@ matrix deplacementHaut(matrix grid){
 	 * @grid le plateau
 	 * @return le nouveau plateau
 	**/
-	for (int x = 0; x < GRID_WIDTH; x++){ for (int y = 0; y < GRID_HEIGHT - 1; y++){ //Se place sur case du plateau
-        bool valChanged = false;
+	for (int x = 0; x < GRID_WIDTH; x++){ for (int y = 0; y < GRID_HEIGHT - 1; y++){ //Se place sur une case du plateau
+        bool valueChanged = false; //Permet de vérifier si la case a déjà été fusionnée
         for (int sub_y = 1; y+sub_y < GRID_HEIGHT; sub_y++){ //Etudie les cases situées en dessous de la case actuelle
         	//Si la case actuelle est un 0, remonte la première case étudiée non nulle
             if ((grid[y][x] == 0) and (grid[y+sub_y][x] != 0)){
@@ -150,17 +150,17 @@ matrix deplacementHaut(matrix grid){
                 grid[y+sub_y][x] = 0;
             }
             //Vérifie si il y a une tuile entre la case actuelle et la case étudiée
-            bool interValue = false;
+            bool intermediateValue = false;
             for (int i = 1; i < sub_y; i++){
                 if (grid[y+i][x] != 0){
-                    interValue = true;
+                    intermediateValue = true;
                 }
             }
-            //Fusionne la case actuelle avec la case étudiée si elles on la même valeur, qu'aucune case ne les sépare et qu'une fusion n'a pas déjà eu lieu.
-            if ((grid[y][x] == grid[y+sub_y][x]) and (not interValue) and (not valChanged)){
+            //Fusionne la case actuelle avec la case étudiée si elles on la même valeur, qu'aucune tuile ne les sépare et qu'une fusion n'a pas déjà eu lieu.
+            if ((grid[y][x] == grid[y+sub_y][x]) and (not intermediateValue) and (not valueChanged)){
                 grid[y][x] *= 2;
                 grid[y+sub_y][x] = 0;
-                valChanged = true;
+                valueChanged = true;
             }
         }
     }}

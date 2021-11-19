@@ -33,32 +33,34 @@ int mapMove(int input){
 	 * @param input l'ID de la touche pressee par l'utilisateur
 	 * @return l'entier associé au deplacement
 	**/
-	if (count(VALID_KEYS.begin(), VALID_KEYS.end(), input) == 0){
-		throw invalid_argument("invalid key");
-	}
-	int move;
 	if (input == VALID_KEYS[0]){
-		move = HAUT;
+		return HAUT;
 	}
 	if (input == VALID_KEYS[1]){
-		move = GAUCHE;
+		return GAUCHE;
 	}
 	if (input == VALID_KEYS[2]){
-		move = BAS;
+		return BAS;
 	}
 	if (input == VALID_KEYS[3]){
-		move = DROITE;
+		return DROITE;
 	}
 	if (input == VALID_KEYS[4]){
-		move = UNDO;
+		return UNDO;
 	}
 	if (input == VALID_KEYS[5]){
-		move = EXIT;
+		return EXIT;
 	}
 	if (input == VALID_KEYS[6]){
-		move = RESTART;
+		return RESTART;
 	}
-	return move;
+	if (input == VALID_KEYS[7]){
+		return SAVE;
+	}
+	if (input == VALID_KEYS[8]){
+		return LOAD;
+	}
+	throw invalid_argument("invalid key");
 }
 
 
@@ -106,16 +108,17 @@ void draw(matrix grid, int sc){
 
 	//Affiche les instructions
 	attron(COLOR_PAIR(3));
-	mvprintw(Y_MARGIN,   X_MARGIN, "|--------------------------Instructions---------------------------|");
-	mvprintw(Y_MARGIN+1, X_MARGIN, "|             Jouez avec les flèches directionnelles.             |");
-	mvprintw(Y_MARGIN+2, X_MARGIN, "|Utilisez la touche backspace pour annuler le dernier déplacement.|");
-	mvprintw(Y_MARGIN+3, X_MARGIN, "|            Appuyer sur R pour recommencer une partie            |");
-	mvprintw(Y_MARGIN+4, X_MARGIN, "|     Appuyez sur la touche enter pour quitter le programme.      |");
-	mvprintw(Y_MARGIN+5, X_MARGIN, "|-----------------------------------------------------------------|");
+	mvprintw(Y_MARGIN,   X_MARGIN, "|----------------------Instructions-----------------------|");
+	mvprintw(Y_MARGIN+1, X_MARGIN, "|         Jouez avec les flèches directionnelles.         |");
+	mvprintw(Y_MARGIN+2, X_MARGIN, "| Utilisez BACKSPACE pour annuler le dernier déplacement. |");
+	mvprintw(Y_MARGIN+3, X_MARGIN, "|        Appuyez sur R pour recommencer une partie        |");
+	mvprintw(Y_MARGIN+4, X_MARGIN, "|      Appuyez sur ENTER pour quitter le programme.       |");
+	mvprintw(Y_MARGIN+5, X_MARGIN, "|Utilisez S pour sauvegarder et C pour charger une partie.|");
+	mvprintw(Y_MARGIN+6, X_MARGIN, "|---------------------------------------------------------|");
 	attroff(COLOR_PAIR(3));
 
 	//Affiche le score
-	move(Y_MARGIN+7 ,X_MARGIN);
+	move(Y_MARGIN+8 ,X_MARGIN);
 	attron(COLOR_PAIR(1));
 	printw("Score: ");
 	attroff(COLOR_PAIR(1)); attron(COLOR_PAIR(2));
@@ -129,9 +132,9 @@ void draw(matrix grid, int sc){
 	//Affiche la tete du plateau
 	attron(COLOR_PAIR(1));
 	if (separator.size()%2 == 0){
-		mvprintw(Y_MARGIN+8, X_MARGIN, ( star * (separator.size()/2 - 2) ).c_str());
+		mvprintw(Y_MARGIN+9, X_MARGIN, ( star * (separator.size()/2 - 2) ).c_str());
 	} else {
-		mvprintw(Y_MARGIN+8, X_MARGIN, ( star * (separator.size()/2 - 1) ).c_str());
+		mvprintw(Y_MARGIN+9, X_MARGIN, ( star * (separator.size()/2 - 1) ).c_str());
 	}
 	attroff(COLOR_PAIR(1)); attron(COLOR_PAIR(2));
 	printw("2048");
@@ -141,7 +144,7 @@ void draw(matrix grid, int sc){
 
 	//Affiche le plateau de jeu
 	for (int y = 0; y < GRID_HEIGHT; y++){ //Affiche chaque ligne du plateau
-		move(Y_MARGIN+9+2*y, X_MARGIN);
+		move(Y_MARGIN+10+2*y, X_MARGIN);
 		for (int x = 0; x < GRID_WIDTH; x++){ //Affiche chaque tuile d'une ligne
 
 			//Centre la tuile dans une case
@@ -177,7 +180,7 @@ void draw(matrix grid, int sc){
 		//Complète la ligne et affiche une ligne de séparation avant la suivante
 		attron(COLOR_PAIR(1));
 		printw(star.c_str());
-		move(Y_MARGIN+10+2*y, X_MARGIN);
+		move(Y_MARGIN+11+2*y, X_MARGIN);
 		printw(separator.c_str());
 		attroff(COLOR_PAIR(1));
 	}
@@ -185,31 +188,42 @@ void draw(matrix grid, int sc){
 
 
 void drawWin(){
-	move(2*GRID_HEIGHT+Y_MARGIN+10, X_MARGIN+2);
-	clrtoeol();
+	move(2*GRID_HEIGHT+Y_MARGIN+11, X_MARGIN+2);
 	attron(A_REVERSE);
 	printw("Victoire!");
 	attroff(A_REVERSE);
 }
 
 
+void drawSave(){
+	move(2*GRID_HEIGHT+Y_MARGIN+12, X_MARGIN);
+	printw("Partie sauvegrdée");
+}
+
+
 void invalidMove(){
-	move(2*GRID_HEIGHT+Y_MARGIN+11, X_MARGIN);
+	move(2*GRID_HEIGHT+Y_MARGIN+12, X_MARGIN);
 	printw("Action invalide");
 }
 
 
+void cannotLoad(){
+	move(2*GRID_HEIGHT+Y_MARGIN+12, X_MARGIN);
+	printw("La partie ne peut pas être chargée");
+}
+
+
 void cannotMove(){
-	move(2*GRID_HEIGHT+Y_MARGIN+11, X_MARGIN);
+	move(2*GRID_HEIGHT+Y_MARGIN+12, X_MARGIN);
 	printw("Deplacement impossible");
 }
 
 
 bool drawEnd(){
-	move(2*GRID_HEIGHT+Y_MARGIN+11, X_MARGIN);
+	move(2*GRID_HEIGHT+Y_MARGIN+12, X_MARGIN);
 	clrtoeol();
 	printw("Partie terminée.");
-	move(2*GRID_HEIGHT+Y_MARGIN+12, X_MARGIN);
+	move(2*GRID_HEIGHT+Y_MARGIN+13, X_MARGIN);
 	printw("Appuyer sur R pour recommencer n'importe quelle touche pour quitter...");
 	return (getch() == VALID_KEYS[6]);
 }

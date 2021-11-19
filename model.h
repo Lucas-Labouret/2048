@@ -20,4 +20,4 @@ bool estTermine(Plateau plateau);
 bool estGagnant(Plateau plateau);
 int score(Plateau plateau);
 
-void reset_rand(float seed, int iter);
+void reset_rand(int seed, int iter);

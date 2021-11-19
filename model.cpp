@@ -157,7 +157,7 @@ matrix deplacementHaut(matrix grid){
                 }
             }
             //Fusionne la case actuelle avec la case étudiée si elles on la même valeur, qu'aucune tuile ne les sépare et qu'une fusion n'a pas déjà eu lieu.
-            if ((grid[y][x] == grid[y+sub_y][x]) and (not intermediateValue) and (not valueChanged)){
+            if ((grid[y][x] != 0) and (grid[y][x] == grid[y+sub_y][x]) and (not intermediateValue) and (not valueChanged)){
                 grid[y][x] *= 2;
                 grid[y+sub_y][x] = 0;
                 valueChanged = true;
@@ -170,12 +170,12 @@ matrix deplacementHaut(matrix grid){
 
 matrix deplacementBas(matrix grid){
 	/** Effectue un deplacement vers le bas
-	 * Pour un commentaire plus détaillé du foctionnement de la fonction, se référer à la fonction deplacementHaut()
+	 * Pour un commentaire plus détaillé du fonctionnement de la fonction, se référer à la fonction deplacementHaut()
 	 * @grid le plateau
 	 * @return le nouveau plateau
 	**/
 	for (int x = 0; x < GRID_WIDTH; x++){ for (int y = GRID_HEIGHT-1; y > 0; y--){
-        bool valChanged = false;
+        bool valueChanged = false;
         for (int sub_y = 1; y-sub_y >= 0; sub_y++){
             if ((grid[y][x] == 0) and (grid[y-sub_y][x] != 0)){
                 grid[y][x] = grid[y-sub_y][x];
@@ -187,10 +187,10 @@ matrix deplacementBas(matrix grid){
                     interValue = true;
                 }
             }
-            if ((grid[y][x] == grid[y-sub_y][x]) and (not interValue) and (not valChanged)){
+            if ((grid[y][x] != 0) and (grid[y][x] == grid[y-sub_y][x]) and (not interValue) and (not valueChanged)){
                 grid[y][x] *= 2;
                 grid[y-sub_y][x] = 0;
-                valChanged = true;
+                valueChanged = true;
             }
         }
     }}
@@ -200,12 +200,12 @@ matrix deplacementBas(matrix grid){
 
 matrix deplacementGauche(matrix grid){
 	/** Effectue un deplacement vers la gauche
-	 * Pour un commentaire plus détaillé du foctionnement de cette fonction, se référer à la fonction deplacementHaut()
+	 * Pour un commentaire plus détaillé du fonctionnement de cette fonction, se référer à la fonction deplacementHaut()
 	 * @grid le plateau
 	 * @return le nouveau plateau
 	**/
 	for (int y = 0; y < GRID_HEIGHT; y++){ for (int x = 0; x < GRID_WIDTH - 1; x++){
-        bool valChanged = false;
+        bool valueChanged = false;
         for (int sub_x = 1; x+sub_x < GRID_WIDTH; sub_x++){
             if ((grid[y][x] == 0) and (grid[y][x+sub_x] != 0)){
                 grid[y][x] = grid[y][x+sub_x];
@@ -217,10 +217,10 @@ matrix deplacementGauche(matrix grid){
                     interValue = true;
                 }
             }
-            if ((grid[y][x] == grid[y][x+sub_x]) and (not interValue) and (not valChanged)){
+            if ((grid[y][x] != 0) and (grid[y][x] == grid[y][x+sub_x]) and (not interValue) and (not valueChanged)){
                 grid[y][x] *= 2;
                 grid[y][x+sub_x] = 0;
-                valChanged = true;
+                valueChanged = true;
             }
         }
     }}
@@ -230,12 +230,12 @@ matrix deplacementGauche(matrix grid){
 
 matrix deplacementDroite(matrix grid){
 	/** Effectue un deplacement vers la droite
-	 * Pour un commentaire plus détaillé du foctionnement de cette fonction, se référer à la fonction deplacementHaut()
+	 * Pour un commentaire plus détaillé du fonctionnement de cette fonction, se référer à la fonction deplacementHaut()
 	 * @grid le plateau
 	 * @return le nouveau plateau
 	**/
 	for (int y = 0; y < GRID_HEIGHT; y++){ for (int x = GRID_WIDTH-1; x > 0; x--){
-        bool valChanged = false;
+        bool valueChanged = false;
         for (int sub_x = 1; x-sub_x >= 0; sub_x++){
             if ((grid[y][x] == 0) and (grid[y][x-sub_x] != 0)){
                 grid[y][x] = grid[y][x-sub_x];
@@ -247,10 +247,10 @@ matrix deplacementDroite(matrix grid){
                     interValue = true;
                 }
             }
-            if ((grid[y][x] == grid[y][x-sub_x]) and (not interValue)){
+            if ((grid[y][x] != 0) and (grid[y][x] == grid[y][x-sub_x]) and (not interValue)){
                 grid[y][x] *= 2;
                 grid[y][x-sub_x] = 0;
-                valChanged = true;
+                valueChanged = true;
             }
         }
     }}
@@ -396,7 +396,7 @@ string dessine(matrix grid){
 }
 
 
-void reset_rand(float seed, int iter){
+void reset_rand(int seed, int iter){
 	/**Reproduit l'état de la fonction rand() après iter-1 déplacements
 	 * @param seed la seed utiliser par la fonction srand() en début de partie
 	 * @param iter le nombre de plateau à avoir été généré

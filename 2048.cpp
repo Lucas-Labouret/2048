@@ -6,24 +6,24 @@
 #include "common.h"
 #include "model.h"
 #include "ncurses_cli.h"
+#include "save.h"
 
 using namespace std;
 /*
 int main(){
-	srand(0);
-	matrix grid = {{0,0,4,0},{0,0,0,0},{0,0,2,0},{0,0,2,0}};
-	cout << dessine(grid) << endl;
-	grid = deplacement(grid, HAUT);
-	cout << dessine(grid) << endl;
+	vector<matrix> gridHistory = loadFile();
+	matrix grid = gridHistory[ gridHistory.size()-1 ];
+	dessine(grid);
 }
 */
 
 int main(){
 	//Initialise le jeu
 	start:
-	float seed = chrono::steady_clock::now().time_since_epoch().count();
+	int seed = chrono::steady_clock::now().time_since_epoch().count() * 1000;
 	srand(seed);
 	matrix grid = plateauInitial();
+	reset_rand(seed, 0);
 	startScreen();
 
 	//Commence la boucle du jeu
@@ -68,6 +68,23 @@ int main(){
 				endScreen();
 				return 0;
 			}
+
+			if (move == SAVE){
+				saveFile(seed, gridHistory);
+				continue;
+			}
+
+			if (move == LOAD){
+				try{
+					gridHistory = loadFile();
+					grid = gridHistory[ gridHistory.size()-1 ];
+					break;
+				} catch (ios_base::failure &e){
+					cannotLoad();
+					continue;
+				}
+			}
+
 			//Reviens d'un mouvement en arriere
 			if (move == UNDO){
 				if (gridHistory.size() > 1){

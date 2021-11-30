@@ -72,10 +72,9 @@ int getUserInput(){
 }
 
 
-void draw(matrix grid, int sc){
+void draw(matrix grid){
 	/**Affiche le jeu dans la console
 	 * @param grid le plateau
-	 * @param sc le score actuel
 	**/
 	//Construit un tableau 2D de chaine de caractères correspondant au plateau
 	//Determine la longeur de la tuile la plus longue
@@ -118,11 +117,12 @@ void draw(matrix grid, int sc){
 	attroff(COLOR_PAIR(3));
 
 	//Affiche le score
+	int score = grid[GRID_HEIGHT][0];
 	move(Y_MARGIN+8 ,X_MARGIN);
 	attron(COLOR_PAIR(1));
 	printw("Score: ");
 	attroff(COLOR_PAIR(1)); attron(COLOR_PAIR(2));
-	printw(to_string(sc).c_str());
+	printw(to_string(score).c_str());
 	attroff(COLOR_PAIR(2));
 
 	//Construit la chaine de caracteres utilisee pour separer chaque ligne du plateau
@@ -197,31 +197,34 @@ void drawWin(){
 
 void drawSave(){
 	move(2*GRID_HEIGHT+Y_MARGIN+12, X_MARGIN);
+	clrtoeol();
 	printw("Partie sauvegrdée");
 }
 
 
 void invalidMove(){
 	move(2*GRID_HEIGHT+Y_MARGIN+12, X_MARGIN);
+	clrtoeol();
 	printw("Action invalide");
 }
 
 
-void cannotLoad(){
+void cannotLoad(const char* message){
 	move(2*GRID_HEIGHT+Y_MARGIN+12, X_MARGIN);
-	printw("La partie ne peut pas être chargée");
+	clrtoeol();
+	printw(message);
 }
 
 
 void cannotMove(){
 	move(2*GRID_HEIGHT+Y_MARGIN+12, X_MARGIN);
+	clrtoeol();
 	printw("Deplacement impossible");
 }
 
 
 bool drawEnd(){
 	move(2*GRID_HEIGHT+Y_MARGIN+12, X_MARGIN);
-	clrtoeol();
 	printw("Partie terminée.");
 	move(2*GRID_HEIGHT+Y_MARGIN+13, X_MARGIN);
 	printw("Appuyer sur R pour recommencer n'importe quelle touche pour quitter...");

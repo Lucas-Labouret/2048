@@ -20,10 +20,10 @@ void endScreen();
 
 int getUserInput();
 
-void draw(matrix grid, int sc);
+void draw(matrix grid);
 void drawWin();
 void drawSave();
 void invalidMove();
-void cannotLoad();
+void cannotLoad(const char* message);
 void cannotMove();
 bool drawEnd();

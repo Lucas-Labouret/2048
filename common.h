@@ -14,7 +14,11 @@ const int RESTART = 6;
 const int SAVE    = 7;
 const int LOAD    = 8;
 
-const int GRID_HEIGHT = 4;
-const int GRID_WIDTH  = 4;
+const  int HUMAN = 0;
+const  int AI    = 1;
+extern int PLAYER;
+
+extern int GRID_HEIGHT;
+extern int GRID_WIDTH;
 
 string operator * (string str, unsigned int n);

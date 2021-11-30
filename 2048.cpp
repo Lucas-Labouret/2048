@@ -2,29 +2,31 @@
 #include <vector>
 #include <chrono>
 #include <stdexcept>
+#include <algorithm>
 
 #include "common.h"
 #include "model.h"
 #include "ncurses_cli.h"
 #include "save.h"
+#include "ai_player.h"
 
 using namespace std;
-/*
-int main(){
-	vector<matrix> gridHistory = loadFile();
-	matrix grid = gridHistory[ gridHistory.size()-1 ];
-	dessine(grid);
-}
-*/
 
-int main(){
+vector<string> VALID_ARGUMENT = {"--height", "--width", "--AI"};
+int GRID_HEIGHT = 4;
+int GRID_WIDTH = 4;
+int PLAYER = HUMAN;
+
+
+bool mainLoop(){
+	/**Gère le déroulement d'une partie
+	 * @return true si le joueur souhaite recommencer une partie, false sinon
+	**/
 	//Initialise le jeu
-	start:
 	int seed = chrono::steady_clock::now().time_since_epoch().count() * 1000;
 	srand(seed);
-	matrix grid = plateauInitial();
+	matrix grid = plateauInitial();/*{{0,0,0,0},{0,0,0,0},{0,1024,1024,0},{0,0,0,0}};*/
 	reset_rand(seed, 0);
-	startScreen();
 
 	//Commence la boucle du jeu
 	vector<matrix> gridHistory = {};
@@ -35,14 +37,10 @@ int main(){
 		gridHistory.push_back(grid);
 
 		//Affiche le plateau
-		int sc = score(grid);
-		draw(grid, sc);
+		draw(grid);
 
 		//Affiche le message de victoire
 		if (estGagnant(grid)){
-			alreadyWon = true;
-		}
-		if (alreadyWon){
 			drawWin();
 		}
 
@@ -50,27 +48,30 @@ int main(){
 		matrix newGrid;
 		while (true){
 			//Demande a l'utilisateur de choisir une action à effectuer
-			while (true){
-				try{
-					move = getUserInput();
-					break;
-				} catch( invalid_argument &e ){
-					invalidMove();
+			if (PLAYER == HUMAN){
+				while (true){
+					try{
+						move = getUserInput();
+						break;
+					} catch( invalid_argument &e ){
+						invalidMove();
+					}
 				}
+			} else {
+				move = aiMain(grid);
 			}
 			//Recommence une partie
 			if (move == RESTART){ 
-				endScreen();
-				goto start; }
+				return true; }
 
 			//Quitte le programme
 			if (move == EXIT){
-				endScreen();
-				return 0;
+				return false;
 			}
 
 			if (move == SAVE){
 				saveFile(seed, gridHistory);
+				drawSave();
 				continue;
 			}
 
@@ -78,9 +79,10 @@ int main(){
 				try{
 					gridHistory = loadFile();
 					grid = gridHistory[ gridHistory.size()-1 ];
+					gridHistory.pop_back();
 					break;
 				} catch (ios_base::failure &e){
-					cannotLoad();
+					cannotLoad(e.what());
 					continue;
 				}
 			}
@@ -105,18 +107,70 @@ int main(){
 				cannotMove();
 			} else {
 				grid = newGrid;
+				grid = addTwoOrFour(grid);
 				break;
 			}
 		}
 	} while (not (estTermine(grid)));
 
-	//Termine le programme en cas de defaite
-	int sc = score(grid);
-	draw(grid, sc);
-	if (drawEnd()){
-		endScreen();
-		goto start;
+	//Termine la partie en cas de defaite
+	draw(grid);
+	return drawEnd(); //Permet au joueur de choisir s'il veut quitter le jeu ou recommencer une partie
+}
+
+
+void parseCmd(int argc, char *argv[]){
+	for (int i = 1; i < argc; i++){
+		if (not count(VALID_ARGUMENT.begin(), VALID_ARGUMENT.end(), string(argv[i]))){
+			throw invalid_argument(string(argv[i]) + " is not a valid argument.");
+		}
+		if (string(argv[i]) == "--height"){
+			if (i+1 >= argc){
+				throw out_of_range("\"--height\" doit être suivie d'un entier supérieur ou égal à 2.");
+			}
+			GRID_HEIGHT = atoi(argv[++i]);
+			if (GRID_HEIGHT < 2){
+				throw invalid_argument("\"--height\" doit être suivie d'un entier supérieur ou égal à 2.");
+			}
+		}
+		if (string(argv[i]) == "--width"){
+			if (i+1 >= argc){
+				throw out_of_range("\"--width\" doit être suivie d'un entier supérieur ou égal à 2.");
+			}
+			GRID_WIDTH = atoi(argv[++i]);
+			if (GRID_WIDTH < 2){
+				throw invalid_argument("\"--width\" doit être suivie d'un entier supérieur ou égal à 2.");
+			}
+		}
+		if (string(argv[i]) == "--AI"){
+			PLAYER = AI;
+		}
 	}
+}
+
+
+int main(int argc, char *argv[]){
+	if (argc > 1){
+		try{
+			parseCmd(argc, argv);
+		} catch (out_of_range &e){
+			cerr << e.what() << endl;
+			return 0;
+		} catch (invalid_argument &e){
+			cerr << e.what() << endl;
+			return 0;
+		}
+	}
+
+	//Lance une partie et en recommence d'autres tant que le joueur le demande
+	startScreen();
+	while (mainLoop());
 	endScreen();
 	return 0;
 }
+/*
+int main(){
+	vector<matrix> gridHistory;
+	gridHistory = loadFile();
+}
+*/

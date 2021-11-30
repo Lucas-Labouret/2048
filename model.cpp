@@ -18,6 +18,7 @@ matrix plateauVide(){
 			cell = 0;
 		}
 	}
+	grid.push_back({0});
 	return grid;
 }
 
@@ -28,8 +29,8 @@ matrix getValidPosition(matrix grid){
 	 * @return un tableau de coordonnées de la forme {{y0, x0}, {y1,x1}, ...}
 	**/ 
 	matrix validPosition = {};
-	for (int y = 0; y < grid.size(); y++){
-		for (int x = 0; x < grid[y].size(); x++){
+	for (int y = 0; y < GRID_HEIGHT; y++){
+		for (int x = 0; x < GRID_WIDTH; x++){
 			if (grid[y][x] == 0){
 				validPosition.push_back({y, x});
 			}
@@ -81,32 +82,32 @@ bool checkMove(matrix grid, int move){
 	**/
 	switch( move ){
 		case HAUT:
-			for (int y = 1; y < grid.size(); y++)
-				for (int x = 0; x<grid[y].size(); x++)
+			for (int y = 1; y < GRID_HEIGHT; y++)
+				for (int x = 0; x<GRID_WIDTH; x++)
 					if ( ((grid[y-1][x] == 0) or (grid[y-1][x] == grid[y][x])) and grid[y][x] != 0 ){
 						return true;
 					}
 			break;
 
 		case BAS:
-			for (int y = 0; y < grid.size()-1; y++)
-				for (int x = 0; x<grid[y].size(); x++)
+			for (int y = 0; y < GRID_HEIGHT-1; y++)
+				for (int x = 0; x < GRID_WIDTH; x++)
 					if ( ((grid[y+1][x] == 0) or (grid[y+1][x] == grid[y][x])) and grid[y][x] != 0 ){
 						return true;
 					};
 			break;
 
 		case GAUCHE:
-			for (int y = 0; y < grid.size(); y++)
-				for (int x = 1; x<grid[y].size(); x++)
+			for (int y = 0; y < GRID_HEIGHT; y++)
+				for (int x = 1; x < GRID_WIDTH; x++)
 					if ( ((grid[y][x-1] == 0) or (grid[y][x-1] == grid[y][x])) and grid[y][x] != 0 ){
 						return true;
 					}
 			break;
 
 		case DROITE:
-			for (int y = 0; y < grid.size(); y++)
-				for (int x = 0; x<grid[y].size()-1; x++)
+			for (int y = 0; y < GRID_HEIGHT; y++)
+				for (int x = 0; x < GRID_WIDTH-1; x++)
 					if ( ((grid[y][x+1] == 0) or (grid[y][x+1] == grid[y][x])) and grid[y][x] != 0 ){
 						return true;
 					}
@@ -160,6 +161,7 @@ matrix deplacementHaut(matrix grid){
             if ((grid[y][x] != 0) and (grid[y][x] == grid[y+sub_y][x]) and (not intermediateValue) and (not valueChanged)){
                 grid[y][x] *= 2;
                 grid[y+sub_y][x] = 0;
+                grid[GRID_HEIGHT][0] += grid[y][x];
                 valueChanged = true;
             }
         }
@@ -170,7 +172,7 @@ matrix deplacementHaut(matrix grid){
 
 matrix deplacementBas(matrix grid){
 	/** Effectue un deplacement vers le bas
-	 * Pour un commentaire plus détaillé du fonctionnement de la fonction, se référer à la fonction deplacementHaut()
+	 * Pour un commentaire plus détaillé du foctionnement de la fonction, se référer à la fonction deplacementHaut()
 	 * @grid le plateau
 	 * @return le nouveau plateau
 	**/
@@ -181,15 +183,16 @@ matrix deplacementBas(matrix grid){
                 grid[y][x] = grid[y-sub_y][x];
                 grid[y-sub_y][x] = 0;
             }
-            bool interValue = false;
+            bool intermediateValue = false;
             for (int i = 1; i < sub_y; i++){
                 if (grid[y-i][x] != 0){
-                    interValue = true;
+                    intermediateValue = true;
                 }
             }
-            if ((grid[y][x] != 0) and (grid[y][x] == grid[y-sub_y][x]) and (not interValue) and (not valueChanged)){
+            if ((grid[y][x] != 0) and (grid[y][x] == grid[y-sub_y][x]) and (not intermediateValue) and (not valueChanged)){
                 grid[y][x] *= 2;
                 grid[y-sub_y][x] = 0;
+                grid[GRID_HEIGHT][0] += grid[y][x];
                 valueChanged = true;
             }
         }
@@ -200,7 +203,7 @@ matrix deplacementBas(matrix grid){
 
 matrix deplacementGauche(matrix grid){
 	/** Effectue un deplacement vers la gauche
-	 * Pour un commentaire plus détaillé du fonctionnement de cette fonction, se référer à la fonction deplacementHaut()
+	 * Pour un commentaire plus détaillé du foctionnement de cette fonction, se référer à la fonction deplacementHaut()
 	 * @grid le plateau
 	 * @return le nouveau plateau
 	**/
@@ -211,15 +214,16 @@ matrix deplacementGauche(matrix grid){
                 grid[y][x] = grid[y][x+sub_x];
                 grid[y][x+sub_x] = 0;
             }
-            bool interValue = false;
+            bool intermediateValue = false;
             for (int i = 1; i < sub_x; i++){
                 if (grid[y][x+i] != 0){
-                    interValue = true;
+                    intermediateValue = true;
                 }
             }
-            if ((grid[y][x] != 0) and (grid[y][x] == grid[y][x+sub_x]) and (not interValue) and (not valueChanged)){
+            if ((grid[y][x] != 0) and (grid[y][x] == grid[y][x+sub_x]) and (not intermediateValue) and (not valueChanged)){
                 grid[y][x] *= 2;
                 grid[y][x+sub_x] = 0;
+                grid[GRID_HEIGHT][0] += grid[y][x];
                 valueChanged = true;
             }
         }
@@ -230,7 +234,7 @@ matrix deplacementGauche(matrix grid){
 
 matrix deplacementDroite(matrix grid){
 	/** Effectue un deplacement vers la droite
-	 * Pour un commentaire plus détaillé du fonctionnement de cette fonction, se référer à la fonction deplacementHaut()
+	 * Pour un commentaire plus détaillé du foctionnement de cette fonction, se référer à la fonction deplacementHaut()
 	 * @grid le plateau
 	 * @return le nouveau plateau
 	**/
@@ -241,15 +245,16 @@ matrix deplacementDroite(matrix grid){
                 grid[y][x] = grid[y][x-sub_x];
                 grid[y][x-sub_x] = 0;
             }
-            bool interValue = false;
+            bool intermediateValue = false;
             for (int i = 1; i < sub_x; i++){
                 if (grid[y][x-i] != 0){
-                    interValue = true;
+                    intermediateValue = true;
                 }
             }
-            if ((grid[y][x] != 0) and (grid[y][x] == grid[y][x-sub_x]) and (not interValue)){
+            if ((grid[y][x] != 0) and (grid[y][x] == grid[y][x-sub_x]) and (not intermediateValue) and (not valueChanged)){
                 grid[y][x] *= 2;
                 grid[y][x-sub_x] = 0;
+                grid[GRID_HEIGHT][0] += grid[y][x];
                 valueChanged = true;
             }
         }
@@ -264,26 +269,21 @@ matrix deplacement(matrix grid, int move){
 	 * @param move le mouvement a effectuer
 	 * @return le nouveau plateau
 	**/
-	matrix newGrid;
 	switch( move ){
 		case HAUT:
-			newGrid = deplacementHaut(grid);
+			return deplacementHaut(grid);
 			break;
 		case BAS:
-			newGrid = deplacementBas(grid);
+			return deplacementBas(grid);
 			break;
 		case GAUCHE:
-			newGrid = deplacementGauche(grid);
+			return deplacementGauche(grid);
 			break;
 		case DROITE:
-			newGrid = deplacementDroite(grid);
+			return deplacementDroite(grid);
 			break;
-	};
-	if (grid == newGrid){
-		return grid;
-	} else {
-		grid = addTwoOrFour(newGrid);
-		return grid;
+		default:
+		    return grid;
 	}
 }
 
@@ -299,7 +299,7 @@ bool estTermine(matrix grid){
 
 
 bool estGagnant(matrix grid){
-	/** Verifie si la partie a ete gagne, i.e. si une tuile contient 2048 ou plus
+	/** Vérifie si la partie a été gagnée, i.e. si une tuile contient 2048 ou plus
 	 * @param grid le plateau
 	 * @return true si la partie a ete gagne, false sinon
 	**/
@@ -309,23 +309,6 @@ bool estGagnant(matrix grid){
 		}
 	}
 	return false;
-}
-
-
-int score(matrix grid){
-	/** Calcul le score d'un plateau donne
-	 * @param grid le plateau
-	 * @return le score
-	**/
-	int s = 0;
-	for (auto line: grid){
-		for (auto cell: line){
-			if (cell!=0){
-				s += (static_cast<int>(log2(cell)) - 1) * cell;
-			}
-		}
-	}
-	return s;
 }
 
 
@@ -353,7 +336,7 @@ string dessine(matrix grid){
 	}
 
 	string str2048 = ""; //La chaine de caractère représentant le jeu
-	string sc = to_string(score(grid)); //Le score actuel
+	string score = to_string(grid[GRID_HEIGHT][0]); //Le score actuel
 
 	//Déclare les caractère utiliser pour afficher la grille
 	string star = "*";
@@ -367,11 +350,11 @@ string dessine(matrix grid){
     //Affiche le score sur une ligne
 	//Affiche la première ligne du plateau sur la suivante et y centre "2048"
 	if (separator.size()%2 == 0){
-		str2048+=  "Score: " + sc + "\n"
+		str2048+=  "Score: " + score + "\n"
 		          +( star * (separator.size()/2 - 3) ) + "2048"
 			      +( star * (separator.size()/2 - 2) ) + "\n";
 	} else {
-		str2048+=  "Score: " + sc + "\n"
+		str2048+=  "Score: " + score + "\n"
 		          +( star * (separator.size()/2 - 2) ) + "2048"
 			      +( star * (separator.size()/2 - 2) ) + "\n";
 	}
@@ -382,7 +365,7 @@ string dessine(matrix grid){
 			//Centre chaque tuile du plateau dans une case
 			if ((max_len-cell.size())%2 == 0){
 				str2048 +=  star + (space * (((max_len-cell.size()))/2))
-						   +cell +(space * (((max_len-cell.size()))/2));
+						   +cell + (space * (((max_len-cell.size()))/2));
 			} else {
 				str2048 +=  star + (space * (((max_len-cell.size()))/2))
 						   +cell + (space * (((max_len-cell.size()))/2 + 1));

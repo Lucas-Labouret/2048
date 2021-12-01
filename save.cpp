@@ -10,6 +10,10 @@
 using namespace std;
 
 void saveFile(int seed, vector<matrix> gridHistory){
+	/**Sauvegarde la partie dansun fichier savefile.txt
+	 * @param seed la seed utilisée par la fonction srand() en début de partie
+	 * @param gridHistory l'historique des plateau générés durant la partie
+	**/
 	ofstream f("savefile.txt");
 	f << GRID_HEIGHT << " " << GRID_WIDTH << endl;
 	f << seed << endl;
@@ -27,6 +31,8 @@ void saveFile(int seed, vector<matrix> gridHistory){
 }
 
 vector<matrix> loadFile(){
+	/**Charge une partie sauvergdée dans un fichier savefile.txt
+	**/
 	ifstream f("savefile.txt");
 
 	int height, width;

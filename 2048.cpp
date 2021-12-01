@@ -47,8 +47,8 @@ bool mainLoop(){
 		//Effectue une action
 		matrix newGrid;
 		while (true){
-			//Demande a l'utilisateur de choisir une action à effectuer
-			if (PLAYER == HUMAN){
+			//Demande au joueur de choisir une action à effectuer
+			if (PLAYER == HUMAN){ //Si le joueur est humain 
 				while (true){
 					try{
 						move = getUserInput();
@@ -57,7 +57,7 @@ bool mainLoop(){
 						invalidMove();
 					}
 				}
-			} else {
+			} else { //Si le joueur est une IA
 				move = aiMain(grid);
 			}
 			//Recommence une partie
@@ -105,9 +105,9 @@ bool mainLoop(){
 			newGrid = deplacement(grid, move);
 			if (grid == newGrid){
 				cannotMove();
+				continue;
 			} else {
 				grid = newGrid;
-				grid = addTwoOrFour(grid);
 				break;
 			}
 		}
@@ -115,6 +115,11 @@ bool mainLoop(){
 
 	//Termine la partie en cas de defaite
 	draw(grid);
+	/*
+	if (PLAYER == AI){
+		saveScore(grid[GRID_HEIGHT][0]);
+	}
+	*/
 	return drawEnd(); //Permet au joueur de choisir s'il veut quitter le jeu ou recommencer une partie
 }
 
@@ -124,7 +129,7 @@ void parseCmd(int argc, char *argv[]){
 		if (not count(VALID_ARGUMENT.begin(), VALID_ARGUMENT.end(), string(argv[i]))){
 			throw invalid_argument(string(argv[i]) + " is not a valid argument.");
 		}
-		if (string(argv[i]) == "--height"){
+		if (string(argv[i]) == "--height"){ //
 			if (i+1 >= argc){
 				throw out_of_range("\"--height\" doit être suivie d'un entier supérieur ou égal à 2.");
 			}
@@ -150,6 +155,7 @@ void parseCmd(int argc, char *argv[]){
 
 
 int main(int argc, char *argv[]){
+	//Parse les arguments passés dnas le terminal
 	if (argc > 1){
 		try{
 			parseCmd(argc, argv);
@@ -168,9 +174,3 @@ int main(int argc, char *argv[]){
 	endScreen();
 	return 0;
 }
-/*
-int main(){
-	vector<matrix> gridHistory;
-	gridHistory = loadFile();
-}
-*/

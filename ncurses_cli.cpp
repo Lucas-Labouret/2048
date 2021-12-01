@@ -80,10 +80,10 @@ void draw(matrix grid){
 	//Determine la longeur de la tuile la plus longue
 	vector<vector<string>> strGrid = {};
 	int max_len = 0;
-	for (auto &line: grid){
+	for (int y = 0; y < GRID_HEIGHT; y++){
 		vector<string> strLine = {};
-		for (auto &cell: line){
-			string strCell = to_string(cell);
+		for (int x = 0; x < GRID_WIDTH; x++){
+			string strCell = to_string(grid[y][x]);
 			if (strCell.size() > max_len){
 				max_len = strCell.size();
 			}
@@ -188,6 +188,8 @@ void draw(matrix grid){
 
 
 void drawWin(){
+	/**Indique que la partie a été remportée
+	**/
 	move(2*GRID_HEIGHT+Y_MARGIN+11, X_MARGIN+2);
 	attron(A_REVERSE);
 	printw("Victoire!");
@@ -196,6 +198,8 @@ void drawWin(){
 
 
 void drawSave(){
+	/**Indique que la partie a été sauvergrdé
+	**/
 	move(2*GRID_HEIGHT+Y_MARGIN+12, X_MARGIN);
 	clrtoeol();
 	printw("Partie sauvegrdée");
@@ -203,6 +207,8 @@ void drawSave(){
 
 
 void invalidMove(){
+	/**Indique que le mouvement demandé n'est pas valide
+	**/
 	move(2*GRID_HEIGHT+Y_MARGIN+12, X_MARGIN);
 	clrtoeol();
 	printw("Action invalide");
@@ -210,6 +216,8 @@ void invalidMove(){
 
 
 void cannotLoad(const char* message){
+	/**Indique que la partie ne peut pas être chargée
+	**/
 	move(2*GRID_HEIGHT+Y_MARGIN+12, X_MARGIN);
 	clrtoeol();
 	printw(message);
@@ -217,6 +225,8 @@ void cannotLoad(const char* message){
 
 
 void cannotMove(){
+	/**Indique que le mouvement demandé est impossible
+	**/
 	move(2*GRID_HEIGHT+Y_MARGIN+12, X_MARGIN);
 	clrtoeol();
 	printw("Deplacement impossible");
@@ -224,6 +234,8 @@ void cannotMove(){
 
 
 bool drawEnd(){
+	/**Indique que la partie est terminée
+	**/
 	move(2*GRID_HEIGHT+Y_MARGIN+12, X_MARGIN);
 	printw("Partie terminée.");
 	move(2*GRID_HEIGHT+Y_MARGIN+13, X_MARGIN);

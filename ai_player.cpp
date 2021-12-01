@@ -87,8 +87,8 @@ int eval_func(matrix grid, int move){
 			zeroBonus += 100;
 		}
 	}}
-	int gapWeight  = initScore;
-	int zeroWeight = initScore;
+	int gapWeight  = 1;
+	int zeroWeight = 1;
 	int finalScore = initScore - gapWeight*gapPenalty + zeroWeight*zeroBonus;
 
 	return finalScore;

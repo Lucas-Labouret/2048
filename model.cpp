@@ -125,7 +125,7 @@ vector<int> getPossibleMoves(matrix grid){
 	/** Verifie que chaque mouvement est possible
 	 * @param grid le plateau
 	 * @return une liste de mouvement possible
-	*/
+	**/
 	vector<int> moves = {HAUT, BAS, GAUCHE, DROITE};
 	vector<int> possibleMoves = {};
 	for (auto move: moves){
@@ -264,26 +264,32 @@ matrix deplacementDroite(matrix grid){
 
 
 matrix deplacement(matrix grid, int move){
-	/** Selectionne le mouvement a effectuer
+	/**Déplace les tuiles d'un Plateau dans la direction donnée et génère une nouvelle tuile si le déplacement est valide
 	 * @param grid le plateau
 	 * @param move le mouvement a effectuer
 	 * @return le nouveau plateau
 	**/
+	matrix newGrid;
 	switch( move ){
 		case HAUT:
-			return deplacementHaut(grid);
+			newGrid = deplacementHaut(grid);
 			break;
 		case BAS:
-			return deplacementBas(grid);
+			newGrid = deplacementBas(grid);
 			break;
 		case GAUCHE:
-			return deplacementGauche(grid);
+			newGrid = deplacementGauche(grid);
 			break;
 		case DROITE:
-			return deplacementDroite(grid);
+			newGrid = deplacementDroite(grid);
 			break;
 		default:
-		    return grid;
+		    newGrid = grid;
+	}
+	if (grid == newGrid){
+		return newGrid;
+	} else {
+		return addTwoOrFour(newGrid);
 	}
 }
 

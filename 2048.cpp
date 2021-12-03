@@ -125,6 +125,10 @@ bool mainLoop(){
 
 
 void parseCmd(int argc, char *argv[]){
+	/**Parse les arguments passés dnas le terminal
+	 * @param argc le nombre d'argument passé
+	 * @param *argv[] un tableau de chaines de caractère représentant les argument
+	**/
 	for (int i = 1; i < argc; i++){
 		if (not count(VALID_ARGUMENT.begin(), VALID_ARGUMENT.end(), string(argv[i]))){
 			throw invalid_argument(string(argv[i]) + " is not a valid argument.");

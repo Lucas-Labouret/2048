@@ -25,7 +25,7 @@ bool mainLoop(){
 	//Initialise le jeu
 	int seed = chrono::steady_clock::now().time_since_epoch().count() * 1000;
 	srand(seed);
-	matrix grid = plateauInitial();/*{{0,0,0,0},{0,0,0,0},{0,1024,1024,0},{0,0,0,0}};*/
+	matrix grid = plateauInitial();
 	reset_rand(seed, 0);
 
 	//Commence la boucle du jeu
@@ -115,11 +115,7 @@ bool mainLoop(){
 
 	//Termine la partie en cas de defaite
 	draw(grid);
-	/*
-	if (PLAYER == AI){
-		saveScore(grid[GRID_HEIGHT][0]);
-	}
-	*/
+
 	return drawEnd(); //Permet au joueur de choisir s'il veut quitter le jeu ou recommencer une partie
 }
 

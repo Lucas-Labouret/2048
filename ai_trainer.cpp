@@ -5,9 +5,10 @@
 
 using namespace std;
 
-bool mainLoop(){
-	/**Gère le déroulement d'une partie
-	 * @return true si le joueur souhaite recommencer une partie, false sinon
+bool mainLoop(vector<int> aiParam){
+	/**Fait jouer une partie à une IA
+	 * @param aiParam les paramètres de l'IA
+	 * @return le score à la fin de la partie
 	**/
 	//Initialise le jeu
 	int seed = chrono::steady_clock::now().time_since_epoch().count() * 1000;
@@ -19,7 +20,7 @@ bool mainLoop(){
 	int move = 0;
 	do{
 		//Demande à l'IA de choisir le déplacement à effectuer
-		move = aiMain(grid);
+		move = aiMain(grid, aiParam);
 
 		//Effectue un deplacement
 		grid = deplacement(grid, move);

@@ -141,3 +141,24 @@ int aiMain(matrix grid){
 	}
 	return bestMove;
 }
+
+int aiMain(matrix grid, vector<int> aiParam){
+	int maxIter     = 4;
+	int gmovWeight  = aiParam[0];
+	int gapWeight   = aiParam[1];
+	int zeroWeight  = aiParam[2];
+	int scoreWeight = aiParam[3];
+
+	matrix newGrid;
+	int bestMove;
+	int bestScore = -2147483647;
+	for (int move: getPossibleMoves(grid)){
+		newGrid = deplacement(grid, move);
+		int finalScore = recursiveEval(newGrid, move, maxIter, gmovWeight, gapWeight, zeroWeight, scoreWeight);
+		if (finalScore > bestScore){
+			bestScore = finalScore;
+			bestMove = move;
+		}
+	}
+	return bestMove;
+}

@@ -309,9 +309,9 @@ bool estGagnant(matrix grid){
 	 * @param grid le plateau
 	 * @return true si la partie a ete gagne, false sinon
 	**/
-	for (auto line: grid){
-		for (auto cell: line){
-			if (cell >= 2048){ return true; }
+	for (int y = 0; y < GRID_HEIGHT; y++){
+		for (int x = 0; x < GRID_WIDTH; x++){
+			if (grid[y][x] >= 2048){ return true; }
 		}
 	}
 	return false;

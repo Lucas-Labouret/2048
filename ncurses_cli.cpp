@@ -27,6 +27,12 @@ void endScreen(){
 	endwin();
 }
 
+void refreshScreen(){
+	/**Rafraichit l'écran
+	**/
+	refresh();
+}
+
 
 int mapMove(int input){
 	/**Associe a chaque deplacement un entier

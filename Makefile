@@ -1,3 +1,35 @@
+all:
+	make --no-print-directory 2048_IA
+	make --no-print-directory ai_trainer
+	make --no-print-directory test
+	make --no-print-directory 2048
+
+
+
+2048_IA: model.o ai_player.o 2048_IA.o common.o
+	g++ -g model.o ai_player.o common.o 2048_IA.o -o 2048_IA
+
+2048_IA.o: 2048_IA.cpp
+	g++ -c -g 2048_IA.cpp
+
+
+
+ai_trainer: ai_player.o ai_trainer.o
+	g++ -g model.o ai_player.o ai_trainer.o common.o -o ai_trainer
+
+ai_trainer.o: ai_trainer.cpp model.h common.h
+	g++ -c -g ai_trainer.cpp
+
+
+
+test: model.o test.o common.o
+	g++ -g test.o model.o common.o -o test
+
+test.o: test.cpp model.h
+	g++ -c -g test.cpp
+
+
+
 2048: 2048.o model.o ncurses_cli.o save.o ai_player.o common.o
 	g++ -g 2048.o model.o ncurses_cli.o save.o ai_player.o common.o -o 2048 -lncurses
 
@@ -10,10 +42,10 @@ ncurses_cli.o: ncurses_cli.cpp common.h
 model.o: model.cpp common.h
 	g++ -c -g model.cpp
 
-save.o: save.cpp save.h
+save.o: save.cpp save.h common.h
 	g++ -c -g save.cpp
 
-ai_player.o: ai_player.cpp ai_player.h
+ai_player.o: ai_player.cpp ai_player.h common.h
 	g++ -c -g ai_player.cpp
 
 common.o: common.cpp common.h

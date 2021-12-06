@@ -10,12 +10,14 @@ using namespace std;
 int eval_func(matrix grid, int move, int gmovWeight,
 									 int gapWeight,
 									 int zeroWeight,
-									 int scoreWeight){
+									 int scoreWeight,
+									 int posWeight){
 	grid = deplacement(grid, move);
 	int initScore = grid[GRID_HEIGHT][0];
 
 	int gapPenalty = 0;
 	int zeroBonus  = 0;
+	int posBonus   = 0;
 	for (int y = 0; y < GRID_HEIGHT; y++){ for (int x = 0; x < GRID_WIDTH; x++){
 		if (grid[y][x] != 0 and y == 0 and x == 0){
 			gapPenalty += abs(
@@ -89,16 +91,21 @@ int eval_func(matrix grid, int move, int gmovWeight,
 		if (grid[y][x] == 0) {
 			zeroBonus += 1;
 		}
+
+		posBonus += grid[y][x] * (y+x);
 	}}
+
 	int gmovPenalty = 0;
 	if (estTermine(grid)){
 		gmovPenalty = 1;
 	}
 
+
 	int  finalScore = scoreWeight*initScore
 	    			  -gapWeight*gapPenalty
 	    			  +zeroWeight*zeroBonus
-	    			  -gmovPenalty*gmovWeight;
+	    			  -gmovPenalty*gmovWeight
+	    			  +posBonus*posWeight;
 	return finalScore;
 }
 
@@ -106,15 +113,16 @@ int eval_func(matrix grid, int move, int gmovWeight,
 int recursiveEval(matrix grid, int iter, int maxIter, int gmovWeight,
 									 				  int gapWeight,
 									 				  int zeroWeight,
-									 				  int scoreWeight){
+									 				  int scoreWeight,
+									 				  int posWeight){
 	int recursiveScore = 0;
 	matrix newGrid;
 	for (int move: getPossibleMoves(grid)){
 		newGrid = deplacement(grid, move);
 		if (iter < maxIter ){
-			recursiveScore += recursiveEval(newGrid, iter+1, maxIter, gmovWeight, gapWeight, zeroWeight, scoreWeight);
+			recursiveScore += recursiveEval(newGrid, iter+1, maxIter, gmovWeight, gapWeight, zeroWeight, scoreWeight, posWeight);
 		} else {
-			recursiveScore += eval_func(newGrid, move, gmovWeight, gapWeight, zeroWeight, scoreWeight);
+			recursiveScore += eval_func(newGrid, move, gmovWeight, gapWeight, zeroWeight, scoreWeight, posWeight);
 		}
 	}
 	return recursiveScore/4;
@@ -122,18 +130,19 @@ int recursiveEval(matrix grid, int iter, int maxIter, int gmovWeight,
 
 
 int aiMain(matrix grid){
-	int maxIter     = 4;
-	int gmovWeight  = 10;
-	int gapWeight   = 10;
-	int zeroWeight  = 10;
-	int scoreWeight = 1;
+	int maxIter     = 5;
+	int gmovWeight  = 15986;
+	int gapWeight   = 12588;
+	int zeroWeight  = 7963;
+	int scoreWeight = 8770;
+	int posWeight   = 0;
 
 	matrix newGrid;
 	int bestMove;
 	int bestScore = -2147483647;
 	for (int move: getPossibleMoves(grid)){
 		newGrid = deplacement(grid, move);
-		int finalScore = recursiveEval(newGrid, move, maxIter, gmovWeight, gapWeight, zeroWeight, scoreWeight);
+		int finalScore = recursiveEval(newGrid, move, maxIter, gmovWeight, gapWeight, zeroWeight, scoreWeight, posWeight);
 		if (finalScore > bestScore){
 			bestScore = finalScore;
 			bestMove = move;
@@ -143,18 +152,19 @@ int aiMain(matrix grid){
 }
 
 int aiMain(matrix grid, vector<int> aiParam){
-	int maxIter     = 4;
+	int maxIter     = 0;
 	int gmovWeight  = aiParam[0];
 	int gapWeight   = aiParam[1];
 	int zeroWeight  = aiParam[2];
 	int scoreWeight = aiParam[3];
+	int posWeight   = aiParam[4];
 
 	matrix newGrid;
 	int bestMove;
 	int bestScore = -2147483647;
 	for (int move: getPossibleMoves(grid)){
 		newGrid = deplacement(grid, move);
-		int finalScore = recursiveEval(newGrid, move, maxIter, gmovWeight, gapWeight, zeroWeight, scoreWeight);
+		int finalScore = recursiveEval(newGrid, move, maxIter, gmovWeight, gapWeight, zeroWeight, scoreWeight, posWeight);
 		if (finalScore > bestScore){
 			bestScore = finalScore;
 			bestMove = move;

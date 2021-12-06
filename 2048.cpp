@@ -38,6 +38,7 @@ bool mainLoop(){
 
 		//Affiche le plateau
 		draw(grid);
+		refreshScreen();
 
 		//Affiche le message de victoire
 		if (estGagnant(grid)){

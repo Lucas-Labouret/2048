@@ -366,8 +366,9 @@ string dessine(matrix grid){
 	}
     
     //Construit le plateau case par case
-	for (auto line: strGrid){
-		for (auto cell: line){
+	for (int y = 0; y < GRID_HEIGHT; y++){
+		for (int x = 0; x < GRID_HEIGHT; x++){
+			string cell = strGrid[y][x];
 			//Centre chaque tuile du plateau dans une case
 			if ((max_len-cell.size())%2 == 0){
 				str2048 +=  star + (space * (((max_len-cell.size()))/2))

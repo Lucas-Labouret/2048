@@ -6,6 +6,12 @@ all:
 
 
 
+clean:
+	rm *.o 2048_IA ai_trainer test 2048
+
+
+
+
 2048_IA: model.o ai_player.o 2048_IA.o common.o
 	g++ -g model.o ai_player.o common.o 2048_IA.o -o 2048_IA
 

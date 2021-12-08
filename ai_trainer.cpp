@@ -93,7 +93,7 @@ void toFile(vector<generation> genHistory, vector<vector<int>> scoreHistory, ind
 int main(){
 	srand(0);
 	indiv bestGuy = {10000, 10000, 10000, 10000, 10000};
-	int bestScore;
+	int bestScore = 0;
 	vector<generation> genHistory = {};
 	vector<vector<int>> scoreHistory = {};
 	for (int genIndex = 0; genIndex < MAX_GEN; genIndex++){

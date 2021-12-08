@@ -131,11 +131,11 @@ int recursiveEval(matrix grid, int iter, int maxIter, int gmovWeight,
 
 int aiMain(matrix grid){
 	int maxIter     = 5;
-	int gmovWeight  = 1000000000;
-	int gapWeight   = 1000;
-	int zeroWeight  = 10000;
-	int scoreWeight = 1000;
-	int posWeight   = 100;
+	int gmovWeight  = 15486;
+	int gapWeight   = -230;
+	int zeroWeight  = 14997;
+	int scoreWeight = 0;
+	int posWeight   = -14;
 
 	matrix newGrid;
 	int bestMove;

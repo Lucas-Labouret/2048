@@ -14,8 +14,11 @@ int GRID_HEIGHT = 4;
 int GRID_WIDTH  = 4;
 
 tuple<int, matrix> readGrid(int previousIter){
-	while (true){
-		int iter, score;
+	int iter;
+	matrix grid = {};
+	bool errorFlag = false;
+	do{
+		int score;
 		ifstream f;
 		while (true){
 			f.open("configuration.txt");
@@ -24,9 +27,7 @@ tuple<int, matrix> readGrid(int previousIter){
 			}
 			f.close();
 		}
-		bool errorFlag = false;
 		string strGrid;
-		matrix grid = {};
 		vector<int> line = {};
 		string num = "";
 		for (int n = 0; n < 4; n++){
@@ -52,10 +53,9 @@ tuple<int, matrix> readGrid(int previousIter){
 		}
 		grid.push_back({score});
 		f.close();
+	} while (errorFlag);
 
-		if (errorFlag) { continue; }
-		return make_tuple(iter, grid);
-	}
+	return make_tuple(iter, grid);
 }
 
 
@@ -84,15 +84,17 @@ int main(){
 	int iter;
 	int move;
 	matrix grid;
-	do{
+	while (true){
 		tuple<int, matrix> tmp = readGrid(previousIter);
 		iter = get<0>(tmp);
 		grid = get<1>(tmp);
+
+		if (estTermine(grid)){ break; }
 
 		move = aiMain(grid);
 		cout << dessine(grid) << endl;
 		f << iter << " " << mapMove(move) << endl;
 		previousIter = iter;
-	} while (not estTermine(deplacement(grid, move)));
+	}
 	return 0;
 }

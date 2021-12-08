@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 #include "common.h"
-#include "model.h"
+#include "modele.h"
 #include "save.h"
 
 using namespace std;
@@ -36,7 +36,8 @@ vector<matrix> loadFile(){
 	ifstream f("savefile.txt");
 
 	int height, width;
-	f >> height >> width;
+	if (f >> height >> width){}
+	else { throw ios_base::failure("Aucun fichier de sauvegarde n'a été trouvé"); }
 	if (not (height == GRID_HEIGHT and width == GRID_WIDTH)){
 		throw ios_base::failure( "Les données de sauvegarde correspondent à une grille de " 
 			                    +to_string(width)+ "x" + to_string(height)
@@ -63,7 +64,7 @@ vector<matrix> loadFile(){
 			gridHistory[i/(GRID_WIDTH*GRID_HEIGHT)-1].push_back({s});
 		}
 	}
-	reset_rand(seed, gridHistory.size());
+	reset_rand(seed, gridHistory.size()-1);
 
 	return gridHistory;
 }

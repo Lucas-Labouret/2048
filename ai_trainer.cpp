@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "common.h"
-#include "model.h"
+#include "modele.h"
 #include "ai_player.h"
 
 using namespace std;

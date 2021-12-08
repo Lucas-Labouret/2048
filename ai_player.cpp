@@ -2,7 +2,7 @@
 #include <math.h>
 
 #include "common.h"
-#include "model.h"
+#include "modele.h"
 
 using namespace std;
 

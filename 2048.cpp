@@ -5,7 +5,7 @@
 #include <algorithm>
 
 #include "common.h"
-#include "model.h"
+#include "modele.h"
 #include "ncurses_cli.h"
 #include "save.h"
 #include "ai_player.h"

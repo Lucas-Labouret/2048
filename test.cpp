@@ -23,7 +23,7 @@ void commonTest(){
 
 
 //Test model.cpp
-#include "model.h"
+#include "modele.h"
 
 
 void plateauVideTest(){

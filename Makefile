@@ -12,8 +12,8 @@ clean:
 
 
 
-2048_IA: model.o ai_player.o 2048_IA.o common.o
-	g++ -g model.o ai_player.o common.o 2048_IA.o -o 2048_IA
+2048_IA: modele.o ai_player.o 2048_IA.o common.o
+	g++ -g modele.o ai_player.o common.o 2048_IA.o -o 2048_IA
 
 2048_IA.o: 2048_IA.cpp
 	g++ -c -g 2048_IA.cpp
@@ -21,32 +21,32 @@ clean:
 
 
 ai_trainer: ai_player.o ai_trainer.o
-	g++ -g model.o ai_player.o ai_trainer.o common.o -o ai_trainer
+	g++ -g modele.o ai_player.o ai_trainer.o common.o -o ai_trainer
 
-ai_trainer.o: ai_trainer.cpp model.h common.h
+ai_trainer.o: ai_trainer.cpp modele.h common.h
 	g++ -c -g ai_trainer.cpp
 
 
 
-test: model.o test.o common.o
-	g++ -g test.o model.o common.o -o test
+test: modele.o test.o common.o
+	g++ -g test.o modele.o common.o -o test
 
-test.o: test.cpp model.h
+test.o: test.cpp modele.h
 	g++ -c -g test.cpp
 
 
 
-2048: 2048.o model.o ncurses_cli.o save.o ai_player.o common.o
-	g++ -g 2048.o model.o ncurses_cli.o save.o ai_player.o common.o -o 2048 -lncurses
+2048: 2048.o modele.o ncurses_cli.o save.o ai_player.o common.o
+	g++ -g 2048.o modele.o ncurses_cli.o save.o ai_player.o common.o -o 2048 -lncurses
 
-2048.o: 2048.cpp model.h ncurses_cli.h common.h
+2048.o: 2048.cpp modele.h ncurses_cli.h common.h
 	g++ -c -g 2048.cpp
 
 ncurses_cli.o: ncurses_cli.cpp common.h
 	g++ -c -g ncurses_cli.cpp
 
-model.o: model.cpp common.h
-	g++ -c -g model.cpp
+modele.o: modele.cpp common.h
+	g++ -c -g modele.cpp
 
 save.o: save.cpp save.h common.h
 	g++ -c -g save.cpp
